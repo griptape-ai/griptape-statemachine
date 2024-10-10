@@ -10,6 +10,7 @@ from griptape.structures import Agent
 from griptape.utils import dict_merge
 from statemachine import State, StateMachine
 from statemachine.factory import StateMachineMetaclass
+from pathlib import Path
 
 from griptape_statemachine.parsers import ConfigParser
 
@@ -29,7 +30,7 @@ class BaseMachine(StateMachine):
     """
 
     def __init__(self, config_file: str) -> None:
-        self.config_parser = ConfigParser(config_file)
+        self.config_parser = ConfigParser(Path(config_file))
         self.config = self.config_parser.parse()
         self.last_user_input: str | None = None
 

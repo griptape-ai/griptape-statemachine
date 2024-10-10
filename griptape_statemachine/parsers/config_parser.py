@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import schema
 import yaml
 from attrs import define
@@ -76,7 +74,7 @@ class ConfigParser(BaseParser):
                     ]
 
     def parse(self) -> dict:
-        data = yaml.safe_load(Path(self.file_path).read_text())
+        data = yaml.safe_load(self.file_path.read_text())
 
         CONFIG_SCHEMA.validate(data)
 
