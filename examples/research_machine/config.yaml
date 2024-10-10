@@ -1,0 +1,75 @@
+artifacts:
+  search_description_info:
+    description: Detailed information to guide the search
+    filename: search_description_info.txt
+    name: Search Description
+  current_search_keywords:
+    description: Keywords in the current search and past searches
+    filename: current_search_keywords.txt
+    name: Current Search Keywords
+  raw_websearch_output:
+    description: All of the websearch URLs generated
+    filename: raw_websearch_output.txt
+    name: Raw Websearch Output
+  filtered_websearch_output:
+    description: All of the websearch URLs ranked and filtered
+    filename: filtered_websearch_output.txt
+    name: Filtered Websearch Output
+  raw_webscrape_output:
+    description: All of the raw webscrape 
+    filename: raw_webscrape_output.txt
+    name: Raw Webscrape Output
+  filtered_webscrape_output:
+    description: The webscrape as filtered research
+    filename: filtered_webscrape_output.txt
+    name: Filtered Webscrape Output
+events:
+  next_state:
+    transitions:
+    - from: start
+      to: keywords
+    - from: keywords
+      to: websearch
+    - from: websearch
+      to: webscrape
+    - from: webscrape
+    - to: end
+  send_event:
+    transitions:
+    - from: keywords
+      internal: true
+      on: on_event_keywords
+      to: keywords
+    - from: websearch
+      internal: true
+      on: on_event_websearch
+      to: websearch
+    - from: webscrape
+      internal: true
+      on: on_event_webscrape
+      to: webscrape
+  restart:
+    transitions:
+    - from: websearch
+      to: keywords
+rulesets:
+states:
+  start:
+    initial: true
+  tell_joke:
+    structures:
+      joke_teller: {}
+  explain_joke:
+    structures:
+      joke_explainer: {}
+  end:
+    final: true
+structures:
+  joke_explainer:
+    model: gpt-4o
+    ruleset_ids:
+      - joke_explainer
+  joke_teller:
+    model: gpt-4o
+    ruleset_ids:
+      - joke_teller
