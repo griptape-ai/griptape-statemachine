@@ -58,7 +58,7 @@ class BaseMachine(StateMachine):
         ...     "TrafficLightMachine",
         ...     {
         ...         "states": {
-        ...             "green": {"initial": True},
+        ...             "green": {"initial": True}
         ...             "yellow": {},
         ...             "red": {},
         ...         },
