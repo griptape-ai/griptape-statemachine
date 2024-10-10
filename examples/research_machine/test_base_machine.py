@@ -39,7 +39,7 @@ class BaseMachine(StateMachine):
     """
 
     def __init__(self, config_file: str, **kwargs) -> None:
-        self.config_parser = ConfigParser(Path(config_file))
+        self.config_parser = ConfigParser(config_file)
         self.current_organization: str = str(kwargs.get("current_organization"))
         self.current_user: str = str(kwargs.get("current_user"))
         self.config = self.config_parser.parse()
@@ -207,21 +207,61 @@ class BaseMachine(StateMachine):
 
         if structure_id not in self._structures:
             # Initialize Structure with all the expensive setup
-            structure = Agent(
-                id=structure_id,
-                prompt_driver=OpenAiChatPromptDriver(
-                    model=structure_config.get("model", "gpt-4o"),
-                ),
-            )
+            # TODO: Is this something we could replace with assistants?
+            if "websearch" in structure_id.lower():
+                # TODO: Input API key and search id
+                web_search_tool = WebSearchTool(
+                    web_search_driver=GoogleWebSearchDriver(
+                        api_key="", search_id="", language="en", country="us"
+                    ),
+                    # TODO: Is this something that we want to add on a per use basis? Each time we call get structure it could update.
+                    # Picked google so that these properties could be added.
+                    extra_schema_properties={
+                        "search": {
+                            schema.Literal(
+                                "sort",
+                            ): str
+                        }
+                    },
+                )
+                structure = Agent(
+                    id=structure_id,
+                    prompt_driver=OpenAiChatPromptDriver(
+                        model=structure_config.get("model", "gpt-4o"),
+                    ),
+                    tools=[web_search_tool],
+                )
+            elif "webscrape" in structure_id.lower():
+                # TODO: Create the webscrape tool
+                # Uses TrafilaturaWebScraperDriver as its base driver.
+                # Can change this and can change text chunking
+                web_scrape_tool = WebScraperTool()
+                structure = Agent(
+                    id=structure_id,
+                    prompt_driver=OpenAiChatPromptDriver(
+                        model=structure_config.get("model", "gpt-4o"),
+                    ),
+                    tools=[web_scrape_tool],
+                )
+            else:
+                structure = Agent(
+                    id=structure_id,
+                    prompt_driver=OpenAiChatPromptDriver(
+                        model=structure_config.get("model", "gpt-4o"),
+                    ),
+                )
 
             self._structures[structure_id] = structure
 
         # Create a new clone with state-specific stuff
+        # TODO: Do I need to modify for the webscrape because does it want rules... i can also give it no rules in teh config.yaml
         structure = self._structures[structure_id]
         structure = Agent(
             id=structure.id,
             prompt_driver=structure.prompt_driver,
             conversation_memory=structure.conversation_memory,
+            # Including the websearch or webscrape information
+            tools=structure.tools,
             rulesets=[
                 *self._get_structure_rulesets(structure_config.get("ruleset_ids", [])),
                 *self._get_structure_artifacts(
