@@ -1,7 +1,7 @@
 from griptape.structures import Workflow, Agent
 from griptape.tools import WebScraper,WebSearch
 from griptape.drivers import DuckDuckGoWebSearchDriver, OpenAiChatPromptDriver
-from griptape.tasks import PromptTask
+from griptape.tasks import PromptTask, BaseTask
 # TODO: Create the different necessary tasks
 
 
@@ -19,9 +19,9 @@ class WebSearchAgent:
             return results.output.value
         return ""
 
-    def create_keywords_task(self,information:str) -> None:
+    def create_keywords_task(self,information:str) -> BaseTask:
         #TODO: Create three different queries given the following keywords
-        pass
+        return PromptTask(id="query_keyword_task")
 
 
 # TODO: Add different tasks:
