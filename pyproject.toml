@@ -7,10 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-griptape = "^0.32"
+griptape = {version="^0.32", extras=["drivers-web-search-duckduckgo"]}
 python-statemachine = {extras = ["diagrams"], version = "^2.3.6"}
 pyyaml = "^6.0.2"
 schema = "^0.7.7"
+python-dotenv = "^1.0.1"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -68,3 +68,6 @@ structures:
   websearch_workflow:
     model: gpt-4o
     ruleset_ids:
+  joke_teller:
+    model: gpt-4o
+    ruleset_ids
