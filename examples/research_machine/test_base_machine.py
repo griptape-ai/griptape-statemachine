@@ -10,7 +10,7 @@ from griptape.drivers import OpenAiChatPromptDriver, GoogleWebSearchDriver
 from griptape.events import BaseEvent, EventBus, EventListener, FinishStructureRunEvent
 from griptape.rules import Rule, Ruleset
 from griptape.structures import Agent
-from griptape.tools import WebScraperTool, WebSearchTool
+from griptape.tools import WebScraper, WebSearch
 from griptape.utils import dict_merge
 from statemachine import State, StateMachine
 from statemachine.factory import StateMachineMetaclass
@@ -210,7 +210,7 @@ class BaseMachine(StateMachine):
             # TODO: Is this something we could replace with assistants?
             if "websearch" in structure_id.lower():
                 # TODO: Input API key and search id
-                web_search_tool = WebSearchTool(
+                web_search_tool = WebSearch(
                     web_search_driver=GoogleWebSearchDriver(
                         api_key="", search_id="", language="en", country="us"
                     ),

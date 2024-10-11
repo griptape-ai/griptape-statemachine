@@ -56,20 +56,15 @@ rulesets:
 states:
   start:
     initial: true
-  tell_joke:
+  keywords:
     structures:
-      joke_teller: {}
-  explain_joke:
+  websearch:
     structures:
-      joke_explainer: {}
+  webscrape:
+    structures:
   end:
     final: true
 structures:
-  joke_explainer:
+  websearch_workflow:
     model: gpt-4o
     ruleset_ids:
-      - joke_explainer
-  joke_teller:
-    model: gpt-4o
-    ruleset_ids:
-      - joke_teller
