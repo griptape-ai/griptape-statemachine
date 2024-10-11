@@ -47,7 +47,7 @@ def create_search_task(input:dict, number:str) -> BaseTask:
 def create_scrape_task(input:dict) -> BaseTask:
     return PromptTask()
 
-class WebSearchAgent:
+class WebSearchWorkflow:
 
     websearch_workflow:Workflow = Workflow(id="websearch")
 
@@ -117,7 +117,7 @@ class WebSearchAgent:
 
 if __name__ == "__main__":
      information = "The fast-fashion industry faces increasing pressure to reduce its environmental impact and improve sustainability practices. Fast-fashion retailers struggle to balance consumer demand for trendy, affordable clothing with the need to minimize waste, reduce carbon emissions, and ensure ethical labor practices throughout their supply chains. The industry must find innovative solutions to extend product lifecycles, incorporate recycled materials, and create more transparent and responsible manufacturing processes without significantly increasing costs or compromising style offerings."
-     agent = WebSearchAgent(information)
+     agent = WebSearchWorkflow(information)
      output = agent.search()
 
 
