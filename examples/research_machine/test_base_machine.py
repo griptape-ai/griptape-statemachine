@@ -14,6 +14,9 @@ from griptape.tools import WebScraper, WebSearch
 from griptape.utils import dict_merge
 from statemachine import State, StateMachine
 from statemachine.factory import StateMachineMetaclass
+from research_machine.webscrape_workflow import WebScrapeWorkflow
+from research_machine.webscrape_workflow import WebSearchWorkflow
+
 
 from griptape_statemachine.parsers import ConfigParser
 
@@ -39,7 +42,7 @@ class BaseMachine(StateMachine):
     """
 
     def __init__(self, config_file: str, **kwargs) -> None:
-        self.config_parser = ConfigParser(config_file)
+        self.config_parser = ConfigParser(Path(config_file))
         self.current_organization: str = str(kwargs.get("current_organization"))
         self.current_user: str = str(kwargs.get("current_user"))
         self.config = self.config_parser.parse()
@@ -210,39 +213,12 @@ class BaseMachine(StateMachine):
             # TODO: Is this something we could replace with assistants?
             if "websearch" in structure_id.lower():
                 # TODO: Input API key and search id
-                web_search_tool = WebSearch(
-                    web_search_driver=GoogleWebSearchDriver(
-                        api_key="", search_id="", language="en", country="us"
-                    ),
-                    # TODO: Is this something that we want to add on a per use basis? Each time we call get structure it could update.
-                    # Picked google so that these properties could be added.
-                    extra_schema_properties={
-                        "search": {
-                            schema.Literal(
-                                "sort",
-                            ): str
-                        }
-                    },
-                )
-                structure = Agent(
-                    id=structure_id,
-                    prompt_driver=OpenAiChatPromptDriver(
-                        model=structure_config.get("model", "gpt-4o"),
-                    ),
-                    tools=[web_search_tool],
-                )
+                structure = WebSearchWorkflow()
             elif "webscrape" in structure_id.lower():
                 # TODO: Create the webscrape tool
                 # Uses TrafilaturaWebScraperDriver as its base driver.
                 # Can change this and can change text chunking
-                web_scrape_tool = WebScraperTool()
-                structure = Agent(
-                    id=structure_id,
-                    prompt_driver=OpenAiChatPromptDriver(
-                        model=structure_config.get("model", "gpt-4o"),
-                    ),
-                    tools=[web_scrape_tool],
-                )
+                structure = WebScrapeWorkflow()
             else:
                 structure = Agent(
                     id=structure_id,

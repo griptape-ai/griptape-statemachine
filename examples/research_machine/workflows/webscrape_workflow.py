@@ -28,19 +28,16 @@ defaults_config.Defaults.drivers_config = DriversConfig(
 class WebScrapeWorkflow:
 
     webscrape_workflow:Workflow = Workflow(id="webscrape")
-    information:str = field()
-    urls:list = field()
-
-    def __init__(self, information:str, urls:list) -> None:
-         self.information = information
-         self.urls = urls
-         self.add_webscrape_tasks(urls)
-         self.add_combining_task(len(urls))
-         self.format_output()
-         # Can add comparing task at the end! perhaps...
+    information:str = ""
+    urls:list = []
 
 
-    def scrape(self) -> str:
+    def scrape(self,information:str,urls:list) -> str:
+        self.information = information
+        self.urls = urls
+        self.add_webscrape_tasks(urls)
+        self.add_combining_task(len(urls))
+        self.format_output()
         results = self.webscrape_workflow.run()
         #print(StructureVisualizer(structure=self.webscrape_workflow).to_url())
         if results.output:
@@ -112,6 +109,6 @@ if __name__ == "__main__":
     "https://www.bbc.com/news/science-environment-60382624",
     ]
      info = "The fast-fashion industry faces increasing pressure to reduce its environmental impact and improve sustainability practices. Fast-fashion retailers struggle to balance consumer demand for trendy, affordable clothing with the need to minimize waste, reduce carbon emissions, and ensure ethical labor practices throughout their supply chains. The industry must find innovative solutions to extend product lifecycles, incorporate recycled materials, and create more transparent and responsible manufacturing processes without significantly increasing costs or compromising style offerings."
-     agent = WebScrapeWorkflow(information =info , urls = urls)
-     output = agent.scrape()
+     agent = WebScrapeWorkflow()
+     output = agent.scrape(info, urls)
 

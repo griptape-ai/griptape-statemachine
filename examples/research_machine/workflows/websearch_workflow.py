@@ -64,12 +64,9 @@ class WebSearchWorkflow:
             child.add_child(next_task)
         return TextArtifact("Beginning the search.")
 
-    def __init__(self,information:str) -> None:
-         self.add_keywords_task(information)
-         self.add_code_execution_task()
-         # Can add comparing task at the end! perhaps...
-
-    def search(self) -> str:
+    def search(self,information:str) -> str:
+        self.add_keywords_task(information)
+        self.add_code_execution_task()
         results = self.websearch_workflow.run()
         #print(StructureVisualizer(structure=self.websearch_workflow).to_url())
         if results.output:
@@ -117,8 +114,8 @@ class WebSearchWorkflow:
 
 if __name__ == "__main__":
      information = "The fast-fashion industry faces increasing pressure to reduce its environmental impact and improve sustainability practices. Fast-fashion retailers struggle to balance consumer demand for trendy, affordable clothing with the need to minimize waste, reduce carbon emissions, and ensure ethical labor practices throughout their supply chains. The industry must find innovative solutions to extend product lifecycles, incorporate recycled materials, and create more transparent and responsible manufacturing processes without significantly increasing costs or compromising style offerings."
-     agent = WebSearchWorkflow(information)
-     output = agent.search()
+     agent = WebSearchWorkflow()
+     output = agent.search(information)
 
 
 
